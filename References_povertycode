@@ -14,4 +14,6 @@ The countypov function takes in a integer StateNum which is used to call the pov
 corresponding state's counties. After this the function returns a data frame with the county poverty data.
 
 The tractpov function takes in a integer StateNum which is used to call the poverty data for the 
-corresponding state's census tracts. After this the function returns a data frame with the tract poverty data. 
+corresponding state's census tracts. After this the function returns a data frame with the tract poverty data.
+Note state numbers do not match with the Census Bureau state numbers, to find the numbers use:
+censusdata.geographies(censusdata.censusgeo([('state', '*')]), 'acs5', 2018) 
