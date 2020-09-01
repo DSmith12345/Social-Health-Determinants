@@ -1,4 +1,4 @@
 # Social-Health-Determinants
 
-This is a test and will be replaced with an appropriate description at a later time.
+The goal of this project is to have python code that can obtain and store SDoH data for analysis.
 
