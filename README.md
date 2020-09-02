@@ -12,3 +12,7 @@ Source: https://carrothealth.com/predicting-medicare-plan-choice/
 
 Having standardized data can help improve health services in many ways, some examples are improving health, lower costs, and linking patients to community services.  
 Source: https://www.healthcatalyst.com/insights/social-determinants-health-todays-data-imperative
+
+Assessing the capacity of social determinants of health data to augment predictive models identifying patients in need of wraparound social services.  
+Source: https://academic.oup.com/jamia/article-abstract/25/1/47/4645255
+
