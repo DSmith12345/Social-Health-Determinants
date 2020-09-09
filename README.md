@@ -10,7 +10,7 @@ Source: https://carrothealth.com/carrot-health-insights-tale-two-patients/
 With the used of SDoH measures it is possible to make predictions how certain regions will utilize Medicare plans that are available to them.  
 Source: https://carrothealth.com/predicting-medicare-plan-choice/
 
-Identifying SDoH that cause higher emergency department usage in certain areas.
+Identifying SDoH that cause higher emergency department usage in certain areas.  
 Source: https://carrothealth.com/call-me-a-doctor/
 
 Having standardized data can help improve health services in many ways, some examples are improving health, lower costs, and linking patients to community services.  
