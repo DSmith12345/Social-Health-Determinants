@@ -47,9 +47,9 @@ def cbdata (StateNum, Level, Code, CodeName):
         elif (level == "tract" or level == "Tract"):
             data=censusdata.download('acs5', 2018,
             censusdata.censusgeo([('state', num),('county', '*'),('tract','*')]),
-            ['B00001_001E',code])
+            ['B01001_001E',code])
             
-            data['population']=data['B00001_001E']
+            data['population']=data['B01001_001E']
             #data[name]=round((data[code] / data['B00001_001E'])*100,2)
             data[name]=data[code]
             # Add two column to the table.
