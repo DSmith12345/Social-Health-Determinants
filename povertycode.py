@@ -5,6 +5,7 @@
 # Imports.
 import pandas as pd
 import censusdata
+#TODO import cbdata and dpbupload from current directory
 # Pandas options.
 pd.set_option('display.expand_frame_repr', False)
 pd.set_option('display.precision', 2)
@@ -13,6 +14,7 @@ pd.set_option('display.precision', 2)
 # DP05_0001E is total population.
 # DP03_0119PE is percent of poverty.
 
+#TODO: replace countypov with cb_data
 def countypov (StateNum):
         num = str(StateNum)
         
@@ -37,9 +39,11 @@ WVCounty = countypov(54)
 countypoverty = pd.concat([VACounty, WVCounty])
 
 # Sends to csv file name countypoverty.
-#censusdata.exportcsv('countypoverty.csv', countypoverty)
+#TODO: Add DB_Upload call here to replace csv export
+upload('poverty_county', con = engine)
+censusdata.exportcsv('countypoverty.csv', countypoverty)
 
-# Poverty data on tract level
+#TODO: replace tractpov with cb_data
 def tractpov(StateNum):
         num = str(StateNum)
         tractp = censusdata.download('acs5', 2018,
@@ -61,4 +65,12 @@ WVTract = tractpov(54)
 tractpoverty = pd.concat([VATract, WVTract])
 
 # Exports data to csv file name tractpoverty
+#TODO: Add DB_Upload call here to replace csv export
+upload('poverty_tract', con = engine)
 censusdata.exportcsv('tractpoverty.csv', tractpoverty)
+
+import urllib
+from sqlalchemy import create_engine
+params= urllib.parse.quote_plus("DSN=cca_qa")
+engine = create_engine("netezza+pyodbc:///?odbc_connect=%s" % params,  echo=True)
+
