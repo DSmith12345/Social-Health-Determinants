@@ -5,4 +5,4 @@ TestCode/
 *.csv
 *.ipynb
 *.ini
-*.log
+*.log*
