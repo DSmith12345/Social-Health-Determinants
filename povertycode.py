@@ -25,7 +25,7 @@ WVCounty = cbdata(54, 'county', 'DP05_0001E', 'poverty')
 countypoverty = pd.concat([VACounty, WVCounty])
 
 # Sends to data to database.
-upload('poverty_county', countypoverty, con = engine)
+upload('poverty_county', countypoverty, "postgresql://postgres:Canada123$@localhost/SDoH_DB")
 
 # Virginia data call.
 VATract = cbdata(51, 'tract', 'B17001_002E', 'poverty')
@@ -35,4 +35,4 @@ WVTract = cbdata(54, 'tract', 'B17001_002E', 'poverty')
 tractpoverty = pd.concat([VATract, WVTract])
 
 # Exports data to database.
-upload('poverty_tract', tractpoverty, con = engine)
+upload('poverty_tract', tractpoverty, "postgresql://postgres:Canada123$@localhost/SDoH_DB")
