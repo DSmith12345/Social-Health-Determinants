@@ -9,20 +9,22 @@ pd.set_option('display.precision', 2)
 # Level is the granularity, e.g. county or tract.
 # Code this the item that will be pulled from the Census Bureau.
 # CodeName is the name that will appear on the column.
-def cbdata (StateNum, Level, Code, CodeName):
+def cbdata (StateNum, Level, Variables):
         num = str(StateNum)
         level = Level
-        code = Code
-        name = CodeName
+        dictionary = Variables
+        codes = list(dictionary.values())
+        names = list(dictionary.keys())
         
         if (level == "county" or level == "County"):
-            data=censusdata.download('acs5', 2018, censusdata.censusgeo([('state', num),('county', '*')]),
-                                    ['DP05_0001E', code],
-                                    tabletype='profile')
-            data['population']=data['DP05_0001E']
-            data[name]=data[code]
-            # Add two column to the table.
-            data = data[['population',name]]
+            data=censusdata.download('acs5', 2018, censusdata.censusgeo([('state', num),('county', '*')]), codes, tabletype='profile')
+            
+            niter = len(codes)
+            for i in range(niter):
+                data[names[i]]=data[codes[i]] 
+            
+            # Adds column names.
+            data = data[names]
             
             # Parsing
             t = data
@@ -35,45 +37,60 @@ def cbdata (StateNum, Level, Code, CodeName):
             for i in index:
                 a = t.iloc[i]['longform']
                 b = str(a).split(',')
-                temp.append(b)
+                
+                a = t.iloc[i]['longform']
+                b = str(a).split(',')
+                # State cleaning.
+                d = b[1]
+                d = d.split(':' )[0]
+                b[1]=d
+                
+                c = map(str.strip, b) # Removes whitespaces.
+                temp.append(c)
             # Convert list into dataframe
-            df = pd.DataFrame(temp, columns=['County','State','Level Code'])
+            df = pd.DataFrame(temp, columns=['County','State','Level_Code'])
             # Combine dataframes.
             result = pd.concat([df, t], axis=1, sort=False)
             final = result.drop(columns=['longform'])
-            # Sort by value ascending.
-            #data.sort_values(name, ascending=False, inplace=True)
+            
             
         elif (level == "tract" or level == "Tract"):
             data=censusdata.download('acs5', 2018,
-            censusdata.censusgeo([('state', num),('county', '*'),('tract','*')]),
-            ['B01001_001E',code])
+            censusdata.censusgeo([('state', num),('county', '*'),('tract','*')]),codes)
             
-            data['population']=data['B01001_001E']
-            #data[name]=round((data[code] / data['B00001_001E'])*100,2)
-            data[name]=data[code]
-            # Add two column to the table.
-            data = data[['population',name]]
+            niter = len(codes)
+            for i in range(niter):
+                data[names[i]]=data[codes[i]]
+            
+            # Adds column names
+            data = data[names]
             
             # Parsing
             t = data
             t.reset_index(inplace=True)
             t.rename(columns={'index': 'longform'}, inplace=True)
             index = t.index
-            # Parsing each counties information into a list of three strings: County, State, State and County Code.
+            # Parsing each counties information into a list of three strings: Tract, County, State, State and County Code.
             nrows = len(index)
             temp = []
             for i in index:
                 a = t.iloc[i]['longform']
                 b = str(a).split(',')
-                temp.append(b)
+                # Tract cleaning.
+                d = b[0]
+                d = d.split(' ')[2]
+                b[0]=d
+                # State cleaning.
+                d = b[2]
+                d = d.split(':' )[0]
+                b[2]=d
+                
+                c = map(str.strip, b) # Removes whitespaces.
+                temp.append(c)
             # Convert list into dataframe
-            df = pd.DataFrame(temp, columns=['Track','County','State','Level Code'])
+            df = pd.DataFrame(temp, columns=['Track','County','State','Level_Code'])
             # Combine dataframes.
             result = pd.concat([df, t], axis=1, sort=False)
             final = result.drop(columns=['longform'])
-            # Sort by poverty percent.
-            #data.sort_values(name, ascending=False, inplace=True)
-            
         
         return final
