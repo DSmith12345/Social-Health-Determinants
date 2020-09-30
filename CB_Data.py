@@ -44,11 +44,19 @@ def cbdata (StateNum, Level, Variables):
                 d = b[1]
                 d = d.split(':' )[0]
                 b[1]=d
-                
+                # Splits state number and county number.
+                d = b[2]
+                d1 = d.split('>')[0] 
+                d2 = d.split('>')[1]
+                d1 = d1.split(':')[1] # State number
+                d2 = d2.split(':')[1] # County number
+                b[2]=d2
+                b.append(d1)
+                #
                 c = map(str.strip, b) # Removes whitespaces.
                 temp.append(c)
             # Convert list into dataframe
-            df = pd.DataFrame(temp, columns=['County','State','Level_Code'])
+            df = pd.DataFrame(temp, columns=['County','State','County_Number','State_Number'])
             # Combine dataframes.
             result = pd.concat([df, t], axis=1, sort=False)
             final = result.drop(columns=['longform'])
@@ -84,11 +92,19 @@ def cbdata (StateNum, Level, Variables):
                 d = b[2]
                 d = d.split(':' )[0]
                 b[2]=d
-                
+                # Splits state number and county number.
+                d = b[3]
+                d1 = d.split('>')[0] 
+                d2 = d.split('>')[1]
+                d1 = d1.split(':')[1] # State number
+                d2 = d2.split(':')[1] # County number
+                b[3]=d2
+                b.append(d1)
+                #
                 c = map(str.strip, b) # Removes whitespaces.
                 temp.append(c)
             # Convert list into dataframe
-            df = pd.DataFrame(temp, columns=['Track','County','State','Level_Code'])
+            df = pd.DataFrame(temp, columns=['Track','County','State','County_Number','State_Number'])
             # Combine dataframes.
             result = pd.concat([df, t], axis=1, sort=False)
             final = result.drop(columns=['longform'])
