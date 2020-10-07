@@ -7,8 +7,8 @@ pd.set_option('display.precision', 2)
 
 # StateNum is the number of the state.
 # Level is the granularity, e.g. county or tract.
-# Code this the item that will be pulled from the Census Bureau.
-# CodeName is the name that will appear on the column.
+# Variables is a dictionary that takes in the names and variables that will be pulled.
+# Example: {'population':'DP05_0001E', 'poverty_percent':'DP03_0119PE'}
 def cbdata (StateNum, Level, Variables):
         num = str(StateNum)
         level = Level
@@ -49,7 +49,7 @@ def cbdata (StateNum, Level, Variables):
                 d1 = d.split('>')[0] 
                 d2 = d.split('>')[1]
                 d1 = d1.split(':')[1] # State number
-                d2 = d2.split(':')[1] # County number
+                d2 = (d2.split(':')[1]) # County number
                 b[2]=d2
                 b.append(d1)
                 #
@@ -60,7 +60,6 @@ def cbdata (StateNum, Level, Variables):
             # Combine dataframes.
             result = pd.concat([df, t], axis=1, sort=False)
             final = result.drop(columns=['longform'])
-            
             
         elif (level == "tract" or level == "Tract"):
             data=censusdata.download('acs5', 2018,
@@ -104,7 +103,7 @@ def cbdata (StateNum, Level, Variables):
                 c = map(str.strip, b) # Removes whitespaces.
                 temp.append(c)
             # Convert list into dataframe
-            df = pd.DataFrame(temp, columns=['Track','County','State','County_Number','State_Number'])
+            df = pd.DataFrame(temp, columns=['Tract','County','State','County_Number','State_Number'])
             # Combine dataframes.
             result = pd.concat([df, t], axis=1, sort=False)
             final = result.drop(columns=['longform'])
