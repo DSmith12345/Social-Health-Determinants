@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  pythoncode:
+    image: pythoncode
+    build:
+      context: .
+      dockerfile: ./Dockerfile

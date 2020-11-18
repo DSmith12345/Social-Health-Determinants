@@ -2,6 +2,7 @@
 __pycache__/
 TestCode/
 /server.txt
+/requirements.txt
 
 *.csv
 *.ipynb
