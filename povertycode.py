@@ -18,7 +18,7 @@ pd.set_option('display.precision', 2)
 # DP05_0001E is total population.
 # DP03_0119PE is percent of poverty.
 
-#
+# Reads in server information.
 with open('server.txt', 'r') as file:
     server = file.read()
 
@@ -37,7 +37,7 @@ WVCounty = cbdata(54, Year,'county', var_county)
 countypoverty = pd.concat([VACounty, WVCounty])
 
 # Sends to data to database.
-upload('poverty_county', countypoverty, server)
+upload('poverty_county_test', countypoverty, server)
 
 # Virginia data call.
 VATract = cbdata(51, Year, 'tract',  var_tract)
@@ -47,4 +47,4 @@ WVTract = cbdata(54, Year, 'tract', var_tract)
 tractpoverty = pd.concat([VATract, WVTract])
 
 # Exports data to database.
-upload('poverty_tract', tractpoverty, server)
+upload('poverty_tract_test', tractpoverty, server)
