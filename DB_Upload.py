@@ -1,7 +1,6 @@
 import psycopg2
 import sqlalchemy
 import pandas as pd
-from CB_Data import cbdata
 
 # TableName is the name of the table that will be created in the database.
 # Dataframe is the pandas dataframe that will be upload to the database.
