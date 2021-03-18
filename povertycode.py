@@ -7,6 +7,7 @@ import pandas as pd
 import censusdata
 import configparser
 import urllib
+import os
 from sqlalchemy import create_engine
 from CB_Data import cbdata
 from DB_Upload import upload
@@ -18,9 +19,7 @@ pd.set_option('display.precision', 2)
 # DP05_0001E is total population.
 # DP03_0119PE is percent of poverty.
 
-# Reads in server information.
-with open('server.txt', 'r') as file:
-    server = file.read()
+server = os.environ.get('sdoh_con')
 
 # Variables to be pulled for counties.
 var_county =  {'population':'DP05_0001E', 'poverty_percent':'DP03_0119PE'}
