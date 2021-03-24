@@ -1,7 +1,12 @@
 .vscode/
 __pycache__/
 TestCode/
+/server.txt
+/requirements.txt
 
 *.csv
 *.ipynb
 *.ini
+*.log*
+*.xlsx
+*.xls

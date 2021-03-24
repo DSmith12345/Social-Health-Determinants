@@ -1,10 +1,16 @@
 # Author Daniel Smith 
-# Edited: 8/11/20
-# Pulls poverty data from Census Bureau and exports to csv file.
+# Edited: 9/28/20
+# Pulls poverty data from Census Bureau and exports to database.
 
 # Imports.
 import pandas as pd
 import censusdata
+import configparser
+import urllib
+import os
+from sqlalchemy import create_engine
+from CB_Data import cbdata
+from DB_Upload import upload
 # Pandas options.
 pd.set_option('display.expand_frame_repr', False)
 pd.set_option('display.precision', 2)
@@ -13,52 +19,31 @@ pd.set_option('display.precision', 2)
 # DP05_0001E is total population.
 # DP03_0119PE is percent of poverty.
 
-def countypov (StateNum):
-        num = str(StateNum)
-        
-        countyp=censusdata.download('acs5', 2018, censusdata.censusgeo([('state', num),('county', '*')]),
-                                   ['DP05_0001E','DP03_0119PE'],
-                                   tabletype='profile')
-        countyp['population']=countyp['DP05_0001E']
-        countyp['percent_poverty']=countyp['DP03_0119PE']
-        # Add two column to the table.
-        countyp = countyp[['population','percent_poverty']]
-        # Sort by poverty percent.
-        countyp.sort_values('percent_poverty', ascending=False, inplace=True)
-        countyp.head(30)
-        
-        return countyp
+server = os.environ.get('sdoh_con')
+
+# Variables to be pulled for counties.
+var_county =  {'population':'DP05_0001E', 'poverty_percent':'DP03_0119PE'}
+# Variables to be pulled for tracts.
+var_tract =  {'population':'B01001_001E', 'poverty_count':'B17001_002E'}
+# Year of data.
+Year = 2018
 
 # Virginia data call.
-VACounty = countypov(51)
+VACounty = cbdata(51, Year,'county', var_county)
 # West Virginia data call.
-WVCounty = countypov(54)
+WVCounty = cbdata(54, Year,'county', var_county)
 # Combines to one dataframe.
 countypoverty = pd.concat([VACounty, WVCounty])
 
-# Sends to csv file name countypoverty.
-#censusdata.exportcsv('countypoverty.csv', countypoverty)
-
-# Poverty data on tract level
-def tractpov(StateNum):
-        num = str(StateNum)
-        tractp = censusdata.download('acs5', 2018,
-        censusdata.censusgeo([('state', num),('county', '*'),('tract','*')]),
-        ['B00001_001E','B17010_001E','B17010_002E'])
-        # Population.
-        tractp['population']= tractp.B00001_001E
-        # Percent of poverty.
-        tractp['percent_poverty'] = round((tractp.B17010_002E/ tractp.B17010_001E)*100,2)
-        # Adds columns to table.
-        tractp = tractp[['population', 'percent_poverty']]
-        return tractp
+# Sends to data to database.
+upload('poverty_county_test', countypoverty, server)
 
 # Virginia data call.
-VATract = tractpov(51)
+VATract = cbdata(51, Year, 'tract',  var_tract)
 # West Virginia data call.
-WVTract = tractpov(54)
+WVTract = cbdata(54, Year, 'tract', var_tract)
 # Combines to one dataframe.
 tractpoverty = pd.concat([VATract, WVTract])
 
-# Exports data to csv file name tractpoverty
-censusdata.exportcsv('tractpoverty.csv', tractpoverty)
+# Exports data to database.
+upload('poverty_tract_test', tractpoverty, server)
