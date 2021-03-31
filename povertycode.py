@@ -1,23 +1,12 @@
 # Author Daniel Smith 
-# Edited: 9/28/20
+# Edited: 3/31/20
 # Pulls poverty data from Census Bureau and exports to database.
 
 # Imports.
 import pandas as pd
-import censusdata
-import configparser
-import urllib
 import os
-from sqlalchemy import create_engine
 from CB_Data import cbdata
 from DB_Upload import upload
-# Pandas options.
-pd.set_option('display.expand_frame_repr', False)
-pd.set_option('display.precision', 2)
-
-# Pulls data related to population and poverty.
-# DP05_0001E is total population.
-# DP03_0119PE is percent of poverty.
 
 server = os.environ.get('sdoh_con')
 
@@ -34,6 +23,19 @@ VACounty = cbdata(51, Year,'county', var_county)
 WVCounty = cbdata(54, Year,'county', var_county)
 # Combines to one dataframe.
 countypoverty = pd.concat([VACounty, WVCounty])
+countypoverty = countypoverty.reset_index(drop=True)
+# Adds extra columns
+# Year
+countypoverty['Year'] = ''
+countypoverty['Year'][0] = Year
+# Source
+countypoverty['Source'] = ''
+countypoverty['Source'][0] = 'CB ACS 5 Year'
+# Variables
+countypoverty['Variables'] = ''
+var = list(var_county.keys())
+for i in range(len(var)):
+    countypoverty['Variables'][i]=var[i]
 
 # Sends to data to database.
 upload('poverty_county_test', countypoverty, server)
@@ -44,6 +46,7 @@ VATract = cbdata(51, Year, 'tract',  var_tract)
 WVTract = cbdata(54, Year, 'tract', var_tract)
 # Combines to one dataframe.
 tractpoverty = pd.concat([VATract, WVTract])
+tractpoverty = tractpoverty.reset_index(drop=True)
 
 # Exports data to database.
 upload('poverty_tract_test', tractpoverty, server)

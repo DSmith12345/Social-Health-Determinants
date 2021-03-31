@@ -1,4 +1,4 @@
-import psycopg2
+#import psycopg2
 import sqlalchemy
 import pandas as pd
 
@@ -19,7 +19,7 @@ def upload(TableName, Dataframe ,DB):
     con = engine.connect()
 
     # Adds table to data base.
-    df.to_sql(name, con)
+    df.to_sql(name, con,  if_exists='replace')
 
     con.close()
     

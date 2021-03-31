@@ -61,7 +61,10 @@ def cbdata (StateNum, Year, Level, Variables):
             df = pd.DataFrame(temp, columns=['County','State','County_Number','State_Number'])
             # Combine dataframes.
             result = pd.concat([df, t], axis=1, sort=False)
-            final = result.drop(columns=['longform'])
+            temp = result.drop(columns=['longform'])
+            # Sorting
+            s = temp.sort_values(['County'])
+            final = s.reset_index(drop=True)
             
         elif (level == "tract" or level == "Tract"):
             data=censusdata.download('acs5', y,
@@ -108,6 +111,10 @@ def cbdata (StateNum, Year, Level, Variables):
             df = pd.DataFrame(temp, columns=['Tract','County','State','County_Number','State_Number'])
             # Combine dataframes.
             result = pd.concat([df, t], axis=1, sort=False)
-            final = result.drop(columns=['longform'])
+            #
+            temp = result.drop(columns=['longform'])
+            # Sorting
+            s = temp.sort_values(by=['County'])
+            final = s.reset_index(drop=True)
         
         return final
